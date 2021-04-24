@@ -1,4 +1,4 @@
-﻿package com.houkunlin.dao.extend;
+package com.houkunlin.dao.extend;
 
 import org.springframework.context.annotation.ComponentScan;
 

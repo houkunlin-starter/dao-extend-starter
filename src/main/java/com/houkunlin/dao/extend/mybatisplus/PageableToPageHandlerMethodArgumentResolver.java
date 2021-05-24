@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -31,8 +30,7 @@ public class PageableToPageHandlerMethodArgumentResolver implements HandlerMetho
 
     @Override
     public boolean supportsParameter(MethodParameter methodParameter) {
-        return methodParameter.hasParameterAnnotation(PageableDefault.class) &&
-                IPage.class.isAssignableFrom(methodParameter.getParameterType());
+        return IPage.class.equals(methodParameter.getParameterType());
     }
 
     /**

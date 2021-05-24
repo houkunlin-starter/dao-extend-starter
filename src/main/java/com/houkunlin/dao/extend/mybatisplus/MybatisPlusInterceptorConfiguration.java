@@ -1,6 +1,5 @@
 package com.houkunlin.dao.extend.mybatisplus;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
@@ -10,11 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.data.web.config.SpringDataWebConfiguration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 
@@ -25,27 +20,8 @@ import java.util.List;
  */
 @Configuration
 @EnableTransactionManagement
-@ConditionalOnClass(value = {SpringDataWebConfiguration.class, IPage.class})
-public class MyBatisPlusExtConfiguration implements WebMvcConfigurer {
-    private final PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver;
-
-    public MyBatisPlusExtConfiguration(PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver) {
-        if (pageableHandlerMethodArgumentResolver == null) {
-            throw new IllegalArgumentException("Invalid PageableHandlerMethodArgumentResolver: Configuration MyBatisPlusExt need PageableHandlerMethodArgumentResolver bean");
-        }
-        this.pageableHandlerMethodArgumentResolver = pageableHandlerMethodArgumentResolver;
-    }
-
-    @ConditionalOnMissingBean
-    @Bean
-    public PageableToPageHandlerMethodArgumentResolver pageableToPageHandlerMethodArgumentResolver() {
-        return new PageableToPageHandlerMethodArgumentResolver(pageableHandlerMethodArgumentResolver);
-    }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(pageableToPageHandlerMethodArgumentResolver());
-    }
+@ConditionalOnClass(value = {MybatisPlusInterceptor.class})
+public class MybatisPlusInterceptorConfiguration {
 
     /**
      * 乐观锁配置

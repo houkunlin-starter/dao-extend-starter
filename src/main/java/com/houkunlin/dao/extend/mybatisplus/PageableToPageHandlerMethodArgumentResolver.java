@@ -3,14 +3,17 @@ package com.houkunlin.dao.extend.mybatisplus;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.data.web.config.SpringDataWebConfiguration;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import java.util.List;
@@ -21,7 +24,10 @@ import java.util.stream.Collectors;
  *
  * @author HouKunLin
  */
-public class PageableToPageHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
+@Component
+@Primary
+@ConditionalOnClass(value = {SpringDataWebConfiguration.class, IPage.class})
+public class PageableToPageHandlerMethodArgumentResolver implements IPageHandlerMethodArgumentResolver {
     private final PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver;
 
     public PageableToPageHandlerMethodArgumentResolver(@NonNull PageableHandlerMethodArgumentResolver pageableHandlerMethodArgumentResolver) {

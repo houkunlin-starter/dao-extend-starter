@@ -28,9 +28,10 @@ public interface LambdaQuery<T> {
      * 查询条件构建
      *
      * @param wrapper QueryChainWrapper
+     * @param <E>     泛型
      * @return QueryChainWrapper
      */
-    default QueryChainWrapper<T> queryBuilder(QueryChainWrapper<T> wrapper) {
+    default <E> QueryChainWrapper<E> queryBuilder(QueryChainWrapper<E> wrapper) {
         return wrapper;
     }
 
@@ -39,9 +40,10 @@ public interface LambdaQuery<T> {
      *
      * @param wrapper QueryChainWrapper
      * @param page    分页
+     * @param <E>     泛型
      * @return QueryChainWrapper
      */
-    default QueryChainWrapper<T> orderBuilder(QueryChainWrapper<T> wrapper, IPage<T> page) {
+    default <E> QueryChainWrapper<E> orderBuilder(QueryChainWrapper<E> wrapper, IPage<E> page) {
         final List<OrderItem> orders = page.orders();
         for (final OrderItem order : orders) {
             wrapper.orderBy(true, order.isAsc(), order.getColumn());
@@ -68,9 +70,10 @@ public interface LambdaQuery<T> {
      *
      * @param field 需要查询的字段
      * @param value 查询的值
+     * @param <K>   字段类型泛型
      * @param build QueryChainWrapper 的查询条件方法
      */
-    default void addQuery(String field, Object value, BiConsumer<String, Object> build) {
+    default <K> void addQuery(K field, Object value, BiConsumer<K, Object> build) {
         if (value != null) {
             build.accept(field, value);
         }

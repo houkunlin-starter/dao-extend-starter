@@ -53,15 +53,17 @@ public class PageableToPageHandlerMethodArgumentResolver implements IPageHandler
         Page<?> page = new Page<>(pageable.getPageNumber() + 1L, pageable.getPageSize());
 
         Sort orders = pageable.getSort();
-        if (orders.isSorted()) {
-            List<OrderItem> orderItems = orders.stream().map(order -> {
-                if (order.getDirection() == Sort.Direction.DESC) {
-                    return OrderItem.desc(order.getProperty());
-                }
-                return OrderItem.asc(order.getProperty());
-            }).collect(Collectors.toList());
-            page.addOrder(orderItems);
+        if (!orders.isSorted()) {
+            return page;
         }
+
+        List<OrderItem> orderItems = orders.stream().map(order -> {
+            if (order.getDirection() == Sort.Direction.DESC) {
+                return OrderItem.desc(order.getProperty());
+            }
+            return OrderItem.asc(order.getProperty());
+        }).collect(Collectors.toList());
+        page.addOrder(orderItems);
 
         return page;
     }

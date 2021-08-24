@@ -41,28 +41,30 @@ public class LocalPageHandlerMethodArgumentResolver implements IPageHandlerMetho
 
         Page<?> objectPage = new Page<>(parseInt(page, Integer.MAX_VALUE), parseInt(pageSize, maxPageSize));
 
-        if (directionParameter != null && directionParameter.length > 0) {
-            List<OrderItem> orderItems = new ArrayList<>();
-            for (final String sort : directionParameter) {
-                if (!StringUtils.hasText(sort)) {
-                    continue;
-                }
-                final String[] split = sort.split(",");
-                if (split.length == 1) {
-                    orderItems.add(OrderItem.asc(split[0]));
-                } else {
-                    switch (split[1].toUpperCase()) {
-                        case "DESC":
-                            orderItems.add(OrderItem.desc(split[0]));
-                            break;
-                        case "ASC":
-                        default:
-                            orderItems.add(OrderItem.asc(split[0]));
-                    }
+        if (directionParameter == null || directionParameter.length == 0) {
+            return objectPage;
+        }
+
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (final String sort : directionParameter) {
+            if (!StringUtils.hasText(sort)) {
+                continue;
+            }
+            final String[] split = sort.split(",");
+            if (split.length == 1) {
+                orderItems.add(OrderItem.asc(split[0]));
+            } else {
+                switch (split[1].toUpperCase()) {
+                    case "DESC":
+                        orderItems.add(OrderItem.desc(split[0]));
+                        break;
+                    case "ASC":
+                    default:
+                        orderItems.add(OrderItem.asc(split[0]));
                 }
             }
-            objectPage.addOrder(orderItems);
         }
+        objectPage.addOrder(orderItems);
 
         return objectPage;
     }

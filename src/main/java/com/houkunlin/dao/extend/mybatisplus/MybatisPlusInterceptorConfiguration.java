@@ -1,14 +1,16 @@
 package com.houkunlin.dao.extend.mybatisplus;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
-import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
+import com.baomidou.mybatisplus.extension.plugins.inner.*;
+import lombok.AllArgsConstructor;
+import net.sf.jsqlparser.expression.Expression;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.List;
@@ -21,7 +23,27 @@ import java.util.List;
 @Configuration
 @EnableTransactionManagement
 @ConditionalOnClass(value = {MybatisPlusInterceptor.class})
+@AllArgsConstructor
 public class MybatisPlusInterceptorConfiguration {
+    /**
+     * 数据权限处理器列表
+     */
+    private final List<DataPermissionHandler> handlers;
+
+    /**
+     * 增加数据权限拦截器配置
+     */
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Bean
+    public DataPermissionInterceptor dataPermissionInterceptor() {
+        return new DataPermissionInterceptor((where, mappedStatementId) -> {
+            Expression last = where;
+            for (final DataPermissionHandler expression : handlers) {
+                last = expression.getSqlSegment(last, mappedStatementId);
+            }
+            return last;
+        });
+    }
 
     /**
      * 乐观锁配置

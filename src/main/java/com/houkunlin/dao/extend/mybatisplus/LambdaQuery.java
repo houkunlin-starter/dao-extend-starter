@@ -11,11 +11,15 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
+ * MyBatis-Plus 的 lambada 查询条件对象接口，把 MyBatis 的查询信息构造放到查询对象中。这样在新增、修改、删除查询字段的时候，直接修改查询对象的相关方法内容即可。
+ * 查询对象需要实现 {@link #queryBuilder(QueryChainWrapper)} 或 {@link #queryBuilder(LambdaQueryChainWrapper)} 两个方法中的至少一个
+ *
  * @author HouKunLin
  */
 public interface LambdaQuery<T> {
     /**
-     * 查询条件构建
+     * 查询条件构建，使用实体类 lambda 方法进行查询。
+     * 查询对象需要实现此方法，当通过 {@link #lambdaQuery(IService)} 调用时会调用此方法
      *
      * @param wrapper LambdaQueryChainWrapper
      * @return LambdaQueryChainWrapper
@@ -25,7 +29,8 @@ public interface LambdaQuery<T> {
     }
 
     /**
-     * 查询条件构建
+     * 查询条件构建，使用实际数据库字段名称进行查询。
+     * 查询对象需要实现此方法，当通过 {@link #query(IService, IPage)} 和 {@link #query(IService)} 调用时会调用此方法
      *
      * @param wrapper QueryChainWrapper
      * @return QueryChainWrapper
@@ -77,7 +82,7 @@ public interface LambdaQuery<T> {
     }
 
     /**
-     * 查询条件构建
+     * 查询条件构建，使用实体类 lambda 方法进行查询
      *
      * @param service IService<T>
      * @return LambdaQueryChainWrapper<T>
@@ -87,7 +92,7 @@ public interface LambdaQuery<T> {
     }
 
     /**
-     * 查询条件构建
+     * 查询条件构建，使用实际数据库字段名称进行查询
      *
      * @param service IService<T>
      * @return LambdaQueryChainWrapper<T>
@@ -97,7 +102,7 @@ public interface LambdaQuery<T> {
     }
 
     /**
-     * 查询条件构建
+     * 查询条件构建，使用实际数据库字段名称进行查询
      *
      * @param service IService<T>
      * @param orders  IPage<T>

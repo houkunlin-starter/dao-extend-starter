@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.List;
 
 /**
+ * 配置方法参数处理器
+ *
  * @author HouKunLin
  */
 @AllArgsConstructor

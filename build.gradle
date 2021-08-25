@@ -122,6 +122,7 @@ idea {
 
 jar {
     enabled = true
+    classifier("")
 }
 
 java {

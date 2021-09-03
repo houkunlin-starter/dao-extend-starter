@@ -10,8 +10,10 @@ plugins {
 }
 
 group = 'com.houkunlin'
-version = '1.0.1'
+version = '1.0.2-BUILD-SNAPSHOT'
 sourceCompatibility = '1.8'
+
+def gitRepo = "github.com/houkunlin/dao-extend-starter.git"
 
 configurations {
     compileOnly {
@@ -52,7 +54,7 @@ publishing {
                 name = project.name
                 packaging = 'jar'
                 description = project.name
-                url = 'https://github.com/houkunlin/dao-extend-starter'
+                url = "https://${gitRepo}"
                 // properties = []
                 licenses {
                     license {
@@ -68,9 +70,9 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:git://github.com/houkunlin/dao-extend-starter.git'
-                    developerConnection = 'scm:git://github.com/houkunlin/dao-extend-starter.git'
-                    url = 'git://github.com/houkunlin/dao-extend-starter.git'
+                    connection = "scm:git://${gitRepo}"
+                    developerConnection = "scm:git://${gitRepo}"
+                    url = "git://${gitRepo}"
                 }
             }
         }

@@ -3,10 +3,11 @@ package com.houkunlin.dao.extend.mybatisplus;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.baomidou.mybatisplus.extension.plugins.inner.*;
-import lombok.AllArgsConstructor;
 import net.sf.jsqlparser.expression.Expression;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
@@ -23,12 +24,25 @@ import java.util.List;
 @Configuration
 @EnableTransactionManagement
 @ConditionalOnClass(value = {MybatisPlusInterceptor.class})
-@AllArgsConstructor
 public class MybatisPlusInterceptorConfiguration {
     /**
      * 数据权限处理器列表
      */
     private final List<DataPermissionHandler> handlers;
+    private final long maxPageSize;
+
+    /**
+     * 构造方法
+     *
+     * @param handlers    数据权限处理器列表
+     * @param maxPageSize 分页每页最大数量
+     * @see SpringDataWebProperties.Pageable#maxPageSize
+     */
+    public MybatisPlusInterceptorConfiguration(final List<DataPermissionHandler> handlers,
+                                               @Value("${spring.data.web.max-page-size:2000}") final int maxPageSize) {
+        this.handlers = handlers;
+        this.maxPageSize = maxPageSize;
+    }
 
     /**
      * 增加数据权限拦截器配置
@@ -66,10 +80,13 @@ public class MybatisPlusInterceptorConfiguration {
     /**
      * 分页插件
      */
+    @Order(Ordered.HIGHEST_PRECEDENCE + 2)
     @ConditionalOnMissingBean
     @Bean
     public PaginationInnerInterceptor paginationInterceptor() {
-        return new PaginationInnerInterceptor();
+        final PaginationInnerInterceptor interceptor = new PaginationInnerInterceptor();
+        interceptor.setMaxLimit(maxPageSize);
+        return interceptor;
     }
 
     /**
